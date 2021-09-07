@@ -1,0 +1,30 @@
+<html>
+    <body>
+        <audio id="audio">
+        </audio>
+        <button onclick="javascript:grava();">comença</button>
+        <script>
+            function grava(){
+                element=document.getElementById("audio");
+                userMediaConstraints = {audio: true};
+                audioContext=new window.AudioContext();
+                analyser = audioContext.createAnalyser();
+                 getUserMediaSuccess = stream => {
+                     audioSource = audioContext.createMediaStreamSource(stream);
+                    element.srcObject=audioSource.stream;
+                    audioSource.connect(analyser);
+                    audioSource.connect(audioContext.destination);
+                    this.audioReady = true;
+                   
+                };
+                getUserMediaError = err => {
+                    err && console.error(err);
+                    };
+
+                navigator.getUserMedia(userMediaConstraints, getUserMediaSuccess, getUserMediaError);
+                element.play();
+            }
+            
+        </script>
+    </body>
+</html>
