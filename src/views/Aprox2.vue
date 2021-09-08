@@ -8,13 +8,14 @@
 
 <script>
 import Piano from "@/components/Piano.vue"
+import AudioDaw from "@/components/AudioDaw.vue"
 import {ref} from "vue"
 export default {
     components: {
-        Piano
+        Piano, AudioDaw
     },
     setup() {
-        const pNota1 = ref (null)
+        const pNota1 = ref (null);
         return {pNota1}
     },
 }

@@ -20,6 +20,7 @@ var loudEnough;
 var lestream;
 var idReq;
 var canvasContext;
+var refreshIntervalId;
 export default {
     props: {
         nota: Object,
@@ -123,10 +124,15 @@ export default {
                     lastItem = item;
                     });
                 };
-
+                var vegades=1;
+                var vInstrument;            
                 const drawFreq = () => {
                     canvasContext.fillStyle = 'lightgray';
                     analyser.getByteFrequencyData(dataArray);
+                    if (vegades==1) {
+                        vInstrument=dataArray;
+                        console.log(vInstrument);
+                    }
                     let volumeTotal = 0;
                     canvasContext.fillRect(0, (300 - (256 / 10)), 1024, 1);
 
@@ -159,11 +165,12 @@ export default {
                
                 renderAudio();
                 
-                window.setInterval(() => {
+                refreshIntervalId = window.setInterval(() => {
                     loudEnough && renderKey();
                 }, 250);
         },
         para: function () {
+                window.clearInterval (refreshIntervalId);
                 window.cancelAnimationFrame(idReq);
                 lestream.getTracks().forEach(element=>{
                     element.stop();

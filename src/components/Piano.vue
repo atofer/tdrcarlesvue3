@@ -18,8 +18,7 @@ export default {
   props: {
     nota: Object,
   },
-  setup(props) {
-   console.log (props.nota)
+  setup() {
   },
   computed: {
      blanques: function() {
