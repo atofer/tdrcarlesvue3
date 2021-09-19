@@ -136,5 +136,13 @@ export const KEYS = [
       empty() {
         this.dataArray.length = 0;
       }
+
+      get tamany() {
+        return this.dataArray.length;
+      }
+
+      element(i){
+        return this.dataArray[i];
+      }     
     }
   
