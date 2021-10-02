@@ -47,8 +47,8 @@ export default {
                 const MIN_VOLUME = 5;
                 audioContext = new window.AudioContext();
                 analyser = audioContext.createAnalyser();
-                pitchSamples = new comu.SmartArray();
-                arrayVolums = new comu.SmartArray();
+                pitchSamples = new comu.ArrayLectures();
+                arrayVolums = new comu.ArrayLectures();
                 const sampleRate = audioContext.sampleRate;                
 
                 analyser.fftSize = 2048;
@@ -94,13 +94,13 @@ export default {
                    
                    
                     let retorn = null;
-                    let closestLower = comu.KEYS[0];
-                    let closestHigher = comu.KEYS[comu.KEYS.length - 1];
+                    let closestLower = comu.TECLES[0];
+                    let closestHigher = comu.TECLES[comu.TECLES.length - 1];
 
-                    for (let i = 0; i < comu.KEYS.length; i++) {
-                        if (comu.KEYS[i].hz < pitch) closestLower = comu.KEYS[i];
-                        if (comu.KEYS[i].hz > pitch) {
-                            closestHigher = comu.KEYS[i];
+                    for (let i = 0; i < comu.TECLES.length; i++) {
+                        if (comu.TECLES[i].hz < pitch) closestLower = comu.TECLES[i];
+                        if (comu.TECLES[i].hz > pitch) {
+                            closestHigher = comu.TECLES[i];
                             break;
                         }
                     }

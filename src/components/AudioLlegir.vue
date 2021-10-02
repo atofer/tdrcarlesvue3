@@ -79,7 +79,7 @@ export default {
                 console.log ("contadorPiano: "+contadorPiano);
                 console.log ("contadorGuitarra: "+contadorGuitarra);
                 if (contadorGuitarra>contadorPiano){
-                    this.pNota = comu.KEYS.find(tecla=>tecla.nom == tuner.noteName);
+                    this.pNota = comu.TECLES.find(tecla=>tecla.nom == tuner.noteName);
                     this.$emit('update:nota', this.pNota);  
                 }
                 contadorGuitarra = 0;

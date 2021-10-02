@@ -1,4 +1,4 @@
-export const KEYS = [
+export const TECLES = [
   {pos: 1, hz: 27.5, nom: 'A0', color: 'blanca', despl: null},
   {pos: 2, hz: 29.1352, nom: 'A#0', color: 'negra', despl: 'dreta'},
   {pos: 3, hz: 30.8677, nom: 'B0', color: 'blanca', despl: null},
@@ -91,7 +91,7 @@ export const KEYS = [
 
   
 
- export class SmartArray {
+ export class ArrayLectures {
       constructor() {
         this.dataArray = [];
       }

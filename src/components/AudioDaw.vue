@@ -47,7 +47,7 @@ export default {
    
 
             var renderKey = () => {
-                this.pNota = comu.KEYS.find(tecla=>tecla.nom == tuner.noteName);
+                this.pNota = comu.TECLES.find(tecla=>tecla.nom == tuner.noteName);
                 this.$emit('update:nota', this.pNota);  
             }
 

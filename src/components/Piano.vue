@@ -22,10 +22,10 @@ export default {
   },
   computed: {
      blanques: function() {
-       return comu.KEYS.filter(function(u) {return u.color=='blanca';})
+       return comu.TECLES.filter(function(u) {return u.color=='blanca';})
      },
      negres: function() {
-       return comu.KEYS.filter(function(u) {return u.color=='negra';})
+       return comu.TECLES.filter(function(u) {return u.color=='negra';})
      }
    }
 }

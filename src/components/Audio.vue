@@ -38,12 +38,17 @@ export default {
     },
     methods:{ 
         comenca: function () {
+              navigator.getUserMedia = ( navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia);
+
                 audioReady = false;
                 loudEnough = false;
                 const MIN_VOLUME = 0;
                 audioContext = new window.AudioContext();
                 analyser = audioContext.createAnalyser();
-                pitchSamples = new comu.SmartArray();
+                pitchSamples = new comu.ArrayLectures();
                 const sampleRate = audioContext.sampleRate;                
 
                 analyser.fftSize = 2048;
@@ -77,13 +82,13 @@ export default {
 
                 const getKey = () => {
                     const pitch = pitchSamples.mode;
-                    let closestLower = comu.KEYS[0];
-                    let closestHigher = comu.KEYS[comu.KEYS.length - 1];
+                    let closestLower = comu.TECLES[0];
+                    let closestHigher = comu.TECLES[comu.TECLES.length - 1];
 
-                        for (let i = 0; i < comu.KEYS.length; i++) {
-                            if (comu.KEYS[i].hz < pitch) closestLower = comu.KEYS[i];
-                            if (comu.KEYS[i].hz > pitch) {
-                                closestHigher = comu.KEYS[i];
+                        for (let i = 0; i < comu.TECLES.length; i++) {
+                            if (comu.TECLES[i].hz < pitch) closestLower = comu.TECLES[i];
+                            if (comu.TECLES[i].hz > pitch) {
+                                closestHigher = comu.TECLES[i];
                                 break;
                             }
                         }
@@ -113,15 +118,12 @@ export default {
                     if (i > 0 && i < dataArray.length && item > 128 && lastItem <= 128) {
                         const elapsedSteps = i - lastPos;
                         lastPos = i;
-
                         if (elapsedSteps > STEPS_THRESHOLD) {
                             const hertz = 1 / (elapsedSteps / sampleRate);
                             pitchSamples.push(hertz);
                         }
                     }
-
                     canvasContext.fillRect(i, item, 2, 2);
-
                     lastItem = item;
                     });
                 };
