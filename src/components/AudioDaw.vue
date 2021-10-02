@@ -35,17 +35,20 @@ export default {
             tuner.add(voice);
             tuner.setVolume(0);
             voice.play();
-            tuner.updatePitch()
-        
+            tuner.updatePitch();
+          
+
+ 
             var logPitch = function(){
                 console.log(tuner.pitch, tuner.noteName);
                 idReq = requestAnimationFrame(logPitch);
             };
             logPitch();
+   
 
             var renderKey = () => {
-                this.pNota = comu.KEYS.find(tecla=>tecla.name == tuner.noteName);
-                this.$emit('update:nota', this.pNota)  
+                this.pNota = comu.KEYS.find(tecla=>tecla.nom == tuner.noteName);
+                this.$emit('update:nota', this.pNota);  
             }
 
             refreshIntervalId = window.setInterval(() => {

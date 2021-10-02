@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Inici from "../views/Inici.vue";
 import Aprox1 from "../views/Aprox1.vue";
 import Aprox2 from "../views/Aprox2.vue";
+import Final from "../views/Final.vue";
 import Documentacio from "../views/Documentacio.vue";
 import Llegir from "../views/Llegir.vue";
 
@@ -30,6 +31,11 @@ const routes = [
     path: "/aprox2",
     name: "Aprox2",
     component: Aprox2,
+  },
+  {
+    path: "/final",
+    name: "Final",
+    component: Final,
   },
   {
     path: "/about",

@@ -21,6 +21,10 @@ var lestream;
 var idReq;
 var canvasContext;
 var refreshIntervalId;
+var arrayVolums;
+var contadorGuitarra;
+var contadorPiano;
+var dataArray;
 
 export default {
     props: {
@@ -40,21 +44,30 @@ export default {
         comenca: function () {
                 audioReady = false;
                 loudEnough = false;
-                const MIN_VOLUME = 0;
+                const MIN_VOLUME = 5;
                 audioContext = new window.AudioContext();
                 analyser = audioContext.createAnalyser();
                 pitchSamples = new comu.SmartArray();
+                arrayVolums = new comu.SmartArray();
                 const sampleRate = audioContext.sampleRate;                
 
                 analyser.fftSize = 2048;
                 analyser.minDecibels = -90;
                 analyser.maxDecibels = -10;
+                contadorGuitarra = 0;
+                contadorPiano = 0;
                 const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);                
+                dataArray = new Uint8Array(bufferLength);
+                //var daF = new Uint8Array(bufferLength);
 
                 canvasContext = this.canvas.getContext('2d');
 
                 const userMediaConstraints = {audio: true};
+
+                navigator.getUserMedia = ( navigator.getUserMedia ||
+                       navigator.webkitGetUserMedia ||
+                       navigator.mozGetUserMedia ||
+                       navigator.msGetUserMedia);
 
                 const getUserMediaSuccess = stream => {
                     lestream = stream;
@@ -74,24 +87,67 @@ export default {
 
                 let lastItem = 0;
                 const STEPS_THRESHOLD = 5;
+                //contadorElements = 0;
 
                 const getKey = () => {
                     const pitch = pitchSamples.mode;
+                   
+                   
+                    let retorn = null;
                     let closestLower = comu.KEYS[0];
                     let closestHigher = comu.KEYS[comu.KEYS.length - 1];
 
-                        for (let i = 0; i < comu.KEYS.length; i++) {
-                            if (comu.KEYS[i].hz < pitch) closestLower = comu.KEYS[i];
-                            if (comu.KEYS[i].hz > pitch) {
-                                closestHigher = comu.KEYS[i];
-                                break;
-                            }
+                    for (let i = 0; i < comu.KEYS.length; i++) {
+                        if (comu.KEYS[i].hz < pitch) closestLower = comu.KEYS[i];
+                        if (comu.KEYS[i].hz > pitch) {
+                            closestHigher = comu.KEYS[i];
+                            break;
                         }
+                    }
 
-                        const distanceToLower = Math.abs(pitch - closestLower.hz);
-                        const distanceToHigher = Math.abs(pitch - closestHigher.hz);
+                    const distanceToLower = Math.abs(pitch - closestLower.hz);
+                    const distanceToHigher = Math.abs(pitch - closestHigher.hz);
+                    retorn = Math.min(distanceToLower, distanceToHigher) === distanceToLower?closestLower:closestHigher;
+                    console.log("Frequencia nota: "+retorn.hz); 
+                    //console.log(arrayVolums);                                     
+                    let nota = retorn.hz;
+                    if (nota!=0){                                                
+                       
+                        contadorGuitarra = 0;
+                        contadorPiano = 0;
+                        for (let i=0; i<arrayVolums.tamany; i++){
+                            let daF = arrayVolums.element(i);
+                            let posh2 = Math.round(((nota * 2.0)*1024.0)/24000.0)-1;
+                            let posh4 = Math.round(((nota * 4.0)*1024.0)/24000.0)-1;                        
+                            let volumh2 = daF[posh2];
+                            let volumh4 = daF[posh4];                                                        
+                            if (volumh4<volumh2 && (((volumh2-volumh4)*1.0)/((volumh4+volumh2)*1.0))*100.0>30.0) {
+                                contadorPiano = contadorPiano + 1;
+                                
+                            }                                
+                            else {
+                                contadorGuitarra = contadorGuitarra + 1;   
+                            }
+
+                        }
                         
-                    return Math.min(distanceToLower, distanceToHigher) === distanceToLower?closestLower:closestHigher;                               
+                        if (contadorPiano > contadorGuitarra){
+                            console.log ("piano:"+contadorPiano+" guitarra: "+contadorGuitarra);
+                            retorn = null;
+                        }
+                        else{
+                            console.log ("guitarra: "+contadorGuitarra +" piano:"+contadorPiano );
+                        }
+                        arrayVolums.empty();                    
+                    }
+
+
+                    
+                    
+
+
+                                                                   
+                    return retorn;
                 };
                
 
@@ -105,7 +161,7 @@ export default {
                 const drawWave = () => {
                     if (!loudEnough) return;
                     canvasContext.fillStyle = 'firebrick';
-                    analyser.getByteTimeDomainData(dataArray);                    
+                    analyser.getByteTimeDomainData(dataArray);                            
                     canvasContext.fillRect(0, 128, 1024, 2);
 
                     let lastPos = 0;
@@ -128,24 +184,34 @@ export default {
 
                 const drawFreq = () => {
                     canvasContext.fillStyle = 'lightgray';
-                    analyser.getByteFrequencyData(dataArray);
+                    var daF = new Uint8Array(bufferLength);
+                    var copiaDaF = new Uint8Array(bufferLength);                
+                    analyser.getByteFrequencyData(daF);  
+                                       
+                    
                     let volumeTotal = 0;
                     canvasContext.fillRect(0, (300 - (256 / 10)), 1024, 1);
 
-                    dataArray.forEach((item, i) => {
-                    canvasContext.fillRect(i, 300 - item, 1, item);
-                    volumeTotal += item;
+                    daF.forEach((item, i) => {
+                        canvasContext.fillRect(i, 300 - item, 1, item);
+                        volumeTotal += item;
                     });
 
-                    const volume = volumeTotal / dataArray.length;
+                    const volume = volumeTotal / daF.length;
                     const nowLoudEnough = volume > MIN_VOLUME;
+                
+                    loudEnough = nowLoudEnough;
+                    this.db.textContent = volume;         
+                    if (loudEnough){
+                        daF.forEach((item,i)=>{
+                            copiaDaF[i]=item;
+                        })
+                        arrayVolums.push(copiaDaF);                                                
+                    } 
 
                     if (loudEnough !== nowLoudEnough) {
                         pitchSamples.empty();
                     }
-
-                    loudEnough = nowLoudEnough;
-                    this.db.textContent = volume;                   
                     
                 };
                 

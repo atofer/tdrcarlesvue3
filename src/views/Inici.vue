@@ -6,7 +6,7 @@
     <div class="container"> 
       <div class="row">
         <div class="descripcio col-8">
-            Benvinguts a l'aplicació del meu tdr, aquí podras consultar la documentació que he fet servir per aconseguir que reconegui les notes de la meva guitarra.
+            Benvinguts a l'aplicació del meu tdr, aquí podras consultar la documentació del que he fet servir per aconseguir que reconegui les notes de la meva guitarra.
         </div>
         <div class="col-4 fons"> 
         </div>

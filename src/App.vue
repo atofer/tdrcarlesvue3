@@ -4,6 +4,7 @@
     <router-link to="/documentacio">Documentació</router-link> |
     <router-link to="/aprox1">Aproximació 1</router-link> |
     <router-link to="/aprox2">Aproximació 2</router-link> |
+    <router-link to="/final">Final</router-link> |
     <router-link to="/llegir">Llegir</router-link> |
     <router-link to="/about">About</router-link>
   </div>
